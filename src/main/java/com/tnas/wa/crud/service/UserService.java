@@ -2,13 +2,13 @@ package com.tnas.wa.crud.service;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tnas.wa.crud.model.User;
 import com.tnas.wa.crud.repository.UserRepository;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserService {
