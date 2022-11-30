@@ -1,5 +1,7 @@
 package com.tnas.wa.crud.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,21 @@ public class UserService {
 				.orElseThrow(EntityNotFoundException::new);
 	}
 	
-	public void saveUser(User user) {
-		this.userRespository.save(user);
+	public User createUser(User user) {
+		
+		user.setUpCreationDate();
+		
+		return this.userRespository.save(user);
+	}
+	
+	public User updateUser(User user, Long id) {
+		
+		var savedUser = this.retrieveUser(id);
+		
+		savedUser.setName(user.getName());
+		savedUser.setDocument(user.getDocument());
+		savedUser.setUpdateDate(LocalDateTime.now());
+		
+		return this.userRespository.save(savedUser);
 	}
 }
