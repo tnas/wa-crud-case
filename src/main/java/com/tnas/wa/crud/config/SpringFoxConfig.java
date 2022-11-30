@@ -1,4 +1,4 @@
-package com.tnas.wa.crud;
+package com.tnas.wa.crud.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
