@@ -14,34 +14,50 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.tnas.wa.crud.model.User;
+import com.tnas.wa.crud.api.UserControllerApi;
+import com.tnas.wa.crud.dto.UserDto;
 import com.tnas.wa.crud.service.UserService;
 
 @RestController
 @RequestMapping("/users")
-public class UserController {
+public class UserController implements UserControllerApi {
 
 	@Autowired
 	private UserService userService;
 	
+	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<User> detail(@PathVariable @NotNull Long id) {
-		return ResponseEntity.ok(this.userService.retrieveUser(id));
+	public ResponseEntity<UserDto> detail(@PathVariable @NotNull Long id) {
+		
+		return this.userService.retrieveUser(id)
+				.map(user -> ResponseEntity.ok().body(user))
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
+	@Override
 	@PostMapping
-	public ResponseEntity<User> create(
-			@RequestBody @Valid User user, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<UserDto> create(
+			@RequestBody @Valid UserDto user, UriComponentsBuilder uriBuilder) {
 		
-		var freshUser = this.userService.createUser(user);
-		var address = uriBuilder.path("/users/{id}").buildAndExpand(freshUser.getId()).toUri(); 
+		var optFreshUser = this.userService.createUser(user);
 		
-		return ResponseEntity.created(address).body(freshUser);
+		if (optFreshUser.isPresent()) {
+			var freshUser = optFreshUser.get();
+			var address = uriBuilder.path("/users/{id}").buildAndExpand(freshUser.getId()).toUri(); 
+			return ResponseEntity.created(address).body(freshUser);
+		}
+		else {
+			return ResponseEntity.badRequest().build();
+		}
 	}
 	
+	@Override
 	@PutMapping("/{id}")
-	public ResponseEntity<User> update(
-			@PathVariable @NotNull Long id, @RequestBody @Valid User user) {
-		return ResponseEntity.ok(this.userService.updateUser(user, id));
+	public ResponseEntity<UserDto> update(
+			@PathVariable @NotNull Long id, @RequestBody @Valid UserDto user) {
+		
+		return this.userService.updateUser(user, id)
+				.map(u -> ResponseEntity.ok().body(u))
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 }

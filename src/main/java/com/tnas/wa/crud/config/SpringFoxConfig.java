@@ -3,6 +3,9 @@ package com.tnas.wa.crud.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.fasterxml.classmate.TypeResolver;
+import com.tnas.wa.crud.api.UserParam;
+
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -14,8 +17,9 @@ import springfox.documentation.spring.web.plugins.Docket;
 public class SpringFoxConfig {
 
 	@Bean
-	public Docket api() {
+	public Docket api(TypeResolver typeResolver) {
 		return new Docket(DocumentationType.SWAGGER_2)
+				.additionalModels(typeResolver.resolve(UserParam.class))
 				.apiInfo(this.apiInfo())
 				.select()
 				.apis(RequestHandlerSelectors.basePackage("com.tnas.wa.crud.controller"))

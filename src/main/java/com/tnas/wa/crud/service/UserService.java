@@ -1,12 +1,13 @@
 package com.tnas.wa.crud.service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
-import javax.persistence.EntityNotFoundException;
-
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tnas.wa.crud.dto.UserDto;
 import com.tnas.wa.crud.model.User;
 import com.tnas.wa.crud.repository.UserRepository;
 
@@ -16,26 +17,43 @@ public class UserService {
 	@Autowired
 	private UserRepository userRespository;
 	
-	public User retrieveUser(Long id) {
-		return this.userRespository.findById(id)
-				.orElseThrow(EntityNotFoundException::new);
+	@Autowired
+	private ModelMapper modelMapper;
+	
+	public Optional<UserDto> retrieveUser(Long id) {
+		return this.mapUserToDto(this.userRespository.findById(id));
 	}
 	
-	public User createUser(User user) {
+	public Optional<UserDto> createUser(UserDto dto) {
 		
+		var user = this.modelMapper.map(dto, User.class);
 		user.setUpCreationDate();
 		
-		return this.userRespository.save(user);
+		return this.mapUserToDto(Optional.of(this.userRespository.save(user)));
 	}
 	
-	public User updateUser(User user, Long id) {
+	public Optional<UserDto> updateUser(UserDto dto, Long id) {
 		
-		var savedUser = this.retrieveUser(id);
+		var optSavedUser = this.userRespository.findById(id);
 		
-		savedUser.setName(user.getName());
-		savedUser.setDocument(user.getDocument());
-		savedUser.setUpdateDate(LocalDateTime.now());
-		
-		return this.userRespository.save(savedUser);
+		if (optSavedUser.isPresent()) {
+			
+			var savedUser = optSavedUser.get();
+			
+			savedUser.setName(dto.getName());
+			savedUser.setDocument(dto.getDocument());
+			savedUser.setUpdateDate(LocalDateTime.now());
+			
+			return this.mapUserToDto(Optional.of(this.userRespository.save(savedUser))) ; 
+		}
+		else {
+			return Optional.empty();
+		}
+	}
+	
+	private Optional<UserDto> mapUserToDto(Optional<User> optUser) {
+		return optUser.isPresent() ?
+				Optional.of(this.modelMapper.map(optUser.get(), UserDto.class)) :
+					Optional.empty();
 	}
 }

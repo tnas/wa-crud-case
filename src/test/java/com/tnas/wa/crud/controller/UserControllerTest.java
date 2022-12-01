@@ -16,7 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import com.tnas.wa.crud.model.User;
+import com.tnas.wa.crud.dto.UserDto;
 import com.tnas.wa.crud.util.JsonUserFactory;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
@@ -37,7 +37,7 @@ class UserControllerTest {
 		
     	var jsonUser = JsonUserFactory.getUser(1);
 		var request = new HttpEntity<String>(jsonUser.toString(), httpHeaders);
-    	var response = this.restTemplate.postForEntity(USERS_API, request, User.class);
+    	var response = this.restTemplate.postForEntity(USERS_API, request, UserDto.class);
     	
     	assertEquals(HttpStatus.CREATED, response.getStatusCode());
     	assertEquals(jsonUser.get("name"), response.getBody().getName());
@@ -48,7 +48,7 @@ class UserControllerTest {
 	@Test
 	void whenGettingFirstdUser_ThenHttpOk() throws JSONException {
 		
-		var response = this.restTemplate.getForEntity(USERS_API.concat("/1"), User.class);
+		var response = this.restTemplate.getForEntity(USERS_API.concat("/1"), UserDto.class);
 		
 		var jsonUser = JsonUserFactory.getUser(1);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -65,7 +65,7 @@ class UserControllerTest {
 		
     	var jsonUser = JsonUserFactory.getUser(2);
 		var postRequest = new HttpEntity<String>(jsonUser.toString(), httpHeaders);
-    	var postResponse = this.restTemplate.postForEntity(USERS_API, postRequest, User.class);
+    	var postResponse = this.restTemplate.postForEntity(USERS_API, postRequest, UserDto.class);
     	assertEquals(HttpStatus.CREATED, postResponse.getStatusCode());
     	assertEquals(jsonUser.get("name"), postResponse.getBody().getName());
     	assertEquals(jsonUser.get("document"), postResponse.getBody().getDocument());
@@ -74,7 +74,7 @@ class UserControllerTest {
     	var putRequest = new HttpEntity<String>(jsonUser.toString(), httpHeaders);
     	this.restTemplate.put(USERS_API.concat("/2"), putRequest);
     	
-    	var getResponse = this.restTemplate.getForEntity(USERS_API.concat("/2"), User.class);
+    	var getResponse = this.restTemplate.getForEntity(USERS_API.concat("/2"), UserDto.class);
     	assertEquals(HttpStatus.OK, getResponse.getStatusCode());
         assertEquals(jsonUser.get("name"), getResponse.getBody().getName());
     	assertEquals(jsonUser.get("document"), getResponse.getBody().getDocument());
