@@ -28,6 +28,7 @@
 ### Tecnologias
 - Java 17
 - Spring boot 2.7.6
+- Flyway
 - JUnit 5
 - Lombok
 - Swagger
