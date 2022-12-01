@@ -8,6 +8,10 @@ group = 'com.tnas.wa'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
+jar {
+	baseName 'wa-crud-case.jar'
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -33,5 +37,6 @@ dependencies {
 }
 
 tasks.named('test') {
+	maxParallelForks = 1
 	useJUnitPlatform()
 }
