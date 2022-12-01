@@ -41,6 +41,7 @@ desconsiderados pela aplicação.
 Ela documenta o JSON esperado pelos métodos de criação e atualização de um usuário.
 - Alguns testes unitários foi implementados com JUnit.
 - A documentação da API foi feita via swagger.
+- Uma imagem Docker foi preparada para conteinerização da aplicação.
 
 ### Uso
 - O banco de dados H2 em memória pode ser acessado via
