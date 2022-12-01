@@ -1,4 +1,4 @@
-# Case de entrevista - WA
+# Case de Teste - WA
 
 ### Tecnologias
 - Java
