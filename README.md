@@ -43,6 +43,6 @@ Ela documenta o JSON esperado pelos métodos de criação e atualização de um 
 
 ### Uso
 - O banco de dados H2 em memória pode ser acessado via
-[localhost:8080/h2-console](localhost:8080/h2-console)
+[localhost:8080/h2-console](http://localhost:8080/h2-console)
 - A documentação da API pode ser acessada via
-[localhost:8080/swagger-ui/](localhost:8080/swagger-ui/)
+[localhost:8080/swagger-ui/](http://localhost:8080/swagger-ui/)
